@@ -1,0 +1,18 @@
+# Photo Organizer Configuration Examples
+# Copy and modify these examples for your use case
+
+# Example 1: iPhone Photos from iCloud
+# python main.py -s "C:\Users\YourName\iCloudDrive\Photos" -o "D:\Organized Photos"
+
+# Example 2: Android Photos
+# python main.py -s "C:\Users\YourName\Pictures\Camera" -o "D:\Organized Photos"
+
+# Example 3: Camera SD Card (move files to save space)
+# python main.py -s "E:\DCIM" -o "C:\My Photos" --move
+
+# Example 4: Test run first (recommended)
+# python main.py -s "C:\Test Photos" -o "C:\Organized" --dry-run --log-level DEBUG
+
+# Windows PowerShell examples:
+# python main.py -s "E:\Yasi's Phone\DCIM\Camera" -o "E:\Organized\Yasi Photos"
+# python main.py -s "C:\Users\oarde\Pictures" -o "D:\Organized Photos" --move
