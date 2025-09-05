@@ -1,5 +1,6 @@
 
 import os
+import sys
 import shutil
 import logging
 from PIL import Image
@@ -384,4 +385,4 @@ Examples:
     return 0
 
 if __name__ == "__main__":
-    exit(main())
+    sys.exit(main())

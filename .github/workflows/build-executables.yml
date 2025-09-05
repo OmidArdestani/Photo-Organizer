@@ -1,0 +1,87 @@
+name: Build Executables
+
+on:
+  push:
+    branches: [ main, develop ]
+  pull_request:
+    branches: [ main ]
+  release:
+    types: [ published ]
+  workflow_dispatch:  # Allow manual triggering
+
+jobs:
+  build:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        include:
+          - os: ubuntu-latest
+            python-version: '3.11'
+            executable-suffix: ''
+            artifact-name: photo-organizer-linux
+          - os: windows-latest
+            python-version: '3.11'
+            executable-suffix: '.exe'
+            artifact-name: photo-organizer-windows
+
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Set up Python ${{ matrix.python-version }}
+      uses: actions/setup-python@v4
+      with:
+        python-version: ${{ matrix.python-version }}
+
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r requirements.txt
+        pip install pyinstaller
+
+    - name: Build executable with PyInstaller
+      run: |
+        pyinstaller --onefile --name photo-organizer${{ matrix.executable-suffix }} main.py
+
+    - name: Test executable (Linux)
+      if: matrix.os == 'ubuntu-latest'
+      run: |
+        ./dist/photo-organizer --help
+
+    - name: Test executable (Windows)
+      if: matrix.os == 'windows-latest'
+      run: |
+        .\dist\photo-organizer.exe --help
+
+    - name: Upload executable artifact
+      uses: actions/upload-artifact@v3
+      with:
+        name: ${{ matrix.artifact-name }}
+        path: |
+          dist/photo-organizer${{ matrix.executable-suffix }}
+        retention-days: 30
+
+  create-release-assets:
+    if: github.event_name == 'release'
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+    - name: Download all artifacts
+      uses: actions/download-artifact@v3
+
+    - name: Create release assets
+      run: |
+        mkdir -p release-assets
+        # Copy and rename artifacts for release
+        cp photo-organizer-linux/photo-organizer release-assets/photo-organizer-linux
+        cp photo-organizer-windows/photo-organizer.exe release-assets/photo-organizer-windows.exe
+        
+        # Create zip files
+        cd release-assets
+        zip photo-organizer-linux.zip photo-organizer-linux
+        zip photo-organizer-windows.zip photo-organizer-windows.exe
+
+    - name: Upload release assets
+      uses: actions/upload-artifact@v3
+      with:
+        name: release-assets
+        path: release-assets/*.zip
