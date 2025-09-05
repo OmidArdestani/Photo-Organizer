@@ -1,0 +1,57 @@
+name: Build executables
+
+on:
+  workflow_dispatch: {}
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    name: Build with PyInstaller
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+        python-version: ["3.x"]
+    runs-on: ${{ matrix.os }}
+    env:
+      ENTRYPOINT: main.py # <-- change to your entry script if different
+      APP_NAME: photo-organizer
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+
+      - name: Install dependencies
+        shell: bash
+        run: |
+          python -m pip install --upgrade pip
+          if [ -f requirements.txt ]; then
+            pip install -r requirements.txt;
+          fi
+          pip install pyinstaller
+
+      - name: Verify entrypoint exists
+        shell: bash
+        run: |
+          if [ ! -f "$ENTRYPOINT" ]; then
+            echo "Entrypoint '$ENTRYPOINT' not found. Update env ENTRYPOINT in this workflow."
+            exit 1;
+          fi
+
+      - name: Build executable
+        shell: bash
+        run: |
+          pyinstaller --onefile -n "$APP_NAME" "$ENTRYPOINT"
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ env.APP_NAME }}-${{ runner.os }}
+          path: |
+            dist/${{ env.APP_NAME }}*
