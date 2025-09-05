@@ -1,9 +1,0 @@
-2025-07-20 11:23:07,129 - INFO - Found 8298 media files to process
-2025-07-20 11:23:07,182 - INFO - Skipping duplicate file: E:\Yasi's Phone\DCIM\Camera\.temp-20241219_191401104_1.mp4
-2025-07-20 11:23:07,183 - INFO - Skipping duplicate file: E:\Yasi's Phone\DCIM\Camera\.temp-20250417_003045770_20.mp4
-2025-07-20 11:24:57,844 - INFO - Found 8298 media files to process
-2025-07-20 11:24:57,887 - INFO - Skipping duplicate file: E:\Yasi's Phone\DCIM\Camera\.temp-20241219_191401104_1.mp4
-2025-07-20 11:24:57,891 - INFO - Skipping duplicate file: E:\Yasi's Phone\DCIM\Camera\.temp-20250417_003045770_20.mp4
-2025-07-20 11:44:27,306 - WARNING - Retrying (Retry(total=1, connect=None, read=None, redirect=None, status=None)) after connection broken by 'ReadTimeoutError("HTTPSConnectionPool(host='nominatim.openstreetmap.org', port=443): Read timed out. (read timeout=1)")': /reverse?lat=3.0908476997222225&lon=101.7417099&format=json&accept-language=en&addressdetails=1
-2025-09-05 04:59:08,485 - INFO - DRY RUN MODE - No files will be moved or copied
-2025-09-05 04:59:08,485 - INFO - Would organize files from /tmp/test_source to /tmp/test_output
