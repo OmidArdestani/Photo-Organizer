@@ -28,7 +28,7 @@ jobs:
     - uses: actions/checkout@v4
 
     - name: Set up Python ${{ matrix.python-version }}
-      uses: actions/setup-python@v4
+      uses: actions/setup-python@v5
       with:
         python-version: ${{ matrix.python-version }}
 
@@ -46,14 +46,20 @@ jobs:
       if: matrix.os == 'ubuntu-latest'
       run: |
         ./dist/photo-organizer --help
+        mkdir -p test_source test_output
+        ./dist/photo-organizer -s test_source -o test_output --dry-run
+        rm -rf test_source test_output
 
     - name: Test executable (Windows)
       if: matrix.os == 'windows-latest'
       run: |
         .\dist\photo-organizer.exe --help
+        New-Item -ItemType Directory -Force -Path test_source, test_output
+        .\dist\photo-organizer.exe -s test_source -o test_output --dry-run
+        Remove-Item -Recurse -Force test_source, test_output
 
     - name: Upload executable artifact
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: ${{ matrix.artifact-name }}
         path: |
@@ -66,7 +72,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - name: Download all artifacts
-      uses: actions/download-artifact@v3
+      uses: actions/download-artifact@v4
 
     - name: Create release assets
       run: |
@@ -81,7 +87,7 @@ jobs:
         zip photo-organizer-windows.zip photo-organizer-windows.exe
 
     - name: Upload release assets
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: release-assets
         path: release-assets/*.zip
